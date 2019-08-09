@@ -27,12 +27,15 @@ export function Pane({
 
   return (
     <div
+      className="Cube__Pane"
       aria-hidden={!active}
       tabIndex={-1}
       ref={ref}
       style={{
+        display: "flex",
+        flexDirection: "column",
         outline: "none",
-        background: "#eee",
+        padding: "3px",
         position: "absolute",
         width: width + "px",
         height: height + "px",

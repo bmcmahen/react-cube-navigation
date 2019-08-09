@@ -3,6 +3,7 @@ import { useSpring, animated, SpringValue } from "react-spring";
 import { usePrevious } from "./use-previous";
 import { useGestureResponder } from "react-gesture-responder";
 import { Pane } from "./Pane";
+import useScrollLock from "use-scroll-lock";
 
 export interface CubeProps {
   hasNext?: (i: number) => boolean;
@@ -36,6 +37,9 @@ export function Cube({
   const [indexesToRender, setIndexesToRender] = React.useState([0, 1, 2, -1]);
   const currentActivePane = index % 4;
   const [animating, setAnimating] = React.useState(false);
+
+  // lock body scrolling when gesturing or animating
+  useScrollLock(animating);
 
   /**
    * Animate our cube into position when our active
@@ -154,7 +158,7 @@ export function Cube({
       style={{
         width: width + "px",
         height: height + "px",
-        perspective: "600px"
+        perspective: "900px"
       }}
       {...bind}
     >
