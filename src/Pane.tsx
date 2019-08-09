@@ -1,0 +1,47 @@
+import * as React from "react";
+
+export interface PaneProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+  active: boolean;
+  width: number;
+  rotate: number;
+  height: number;
+}
+
+export function Pane({
+  children,
+  active,
+  width,
+  rotate,
+  height,
+  style,
+  ...other
+}: PaneProps) {
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (active && ref.current) {
+      ref.current!.focus();
+    }
+  }, [active]);
+
+  return (
+    <div
+      aria-hidden={!active}
+      tabIndex={-1}
+      ref={ref}
+      style={{
+        outline: "none",
+        background: "#eee",
+        position: "absolute",
+        width: width + "px",
+        height: height + "px",
+        transform: `rotateY(${rotate}deg) translateZ(${width / 2}px)`,
+        ...style
+      }}
+      {...other}
+    >
+      {children}
+    </div>
+  );
+}

@@ -1,14 +1,28 @@
 import * as React from "react";
-import { useSpring, animated } from "react-spring";
+import { useSpring, animated, SpringValue } from "react-spring";
 import { usePrevious } from "./use-previous";
 import { useGestureResponder } from "react-gesture-responder";
+import { Pane } from "./Pane";
 
 export interface CubeProps {
   hasNext?: (i: number) => boolean;
-  renderItem: (i: number) => React.ReactNode;
+  renderItem: (
+    i: number,
+    active: boolean,
+    rotate: SpringValue<number>
+  ) => React.ReactNode;
   width?: number;
   height?: number;
 }
+
+/**
+ * React-Cube
+ *
+ * A 3d rotated cube which supports gestures
+ * and an infinite number of views (i.e., it supports
+ * windowing). It's inspired by the instagram story
+ * inteface.
+ */
 
 export function Cube({
   hasNext = () => true,
@@ -16,33 +30,26 @@ export function Cube({
   width = 200,
   height = 600
 }: CubeProps) {
-  const cubeFaceStyle = {
-    position: "absolute",
-    width: width + "px",
-    height: height + "px",
-    background: "#ddd",
-    border: "1px solid black",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  } as any;
-
-  // replace with props
-  const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
   const [props, set] = useSpring(() => ({ rotateY: 0 }));
   const [index, setIndex] = React.useState(0);
   const prevIndex = usePrevious(index);
   const [indexesToRender, setIndexesToRender] = React.useState([0, 1, 2, -1]);
+  const currentActivePane = index % 4;
+  const [animating, setAnimating] = React.useState(false);
 
   /**
    * Animate our cube into position when our active
    * index changes
    */
 
+  function onRest() {
+    setAnimating(false);
+  }
+
   React.useEffect(() => {
-    set({ rotateY: index * 90 * -1 });
-  }, [index, set]);
+    setAnimating(true);
+    set({ rotateY: index * 90 * -1, immediate: false, onRest });
+  }, [onRest, index, set]);
 
   /**
    * On drag end, determine the index to show
@@ -65,7 +72,7 @@ export function Cube({
 
         // current
       } else {
-        set({ rotateY: index * 90 * -1 });
+        set({ rotateY: index * 90 * -1, onRest: () => {}, immediate: false });
       }
     },
     [index, width]
@@ -94,6 +101,10 @@ export function Cube({
     onRelease: onEnd,
     onTerminate: onEnd,
     onMove: ({ delta }) => {
+      if (!animating) {
+        setAnimating(true);
+      }
+
       const currentRotate = index * 90 * -1;
       const a = [0, width];
       const b = [currentRotate, currentRotate + 90];
@@ -110,7 +121,8 @@ export function Cube({
 
       set({
         rotateY: v,
-        immediate: true
+        immediate: true,
+        onRest: () => {}
       });
     }
   });
@@ -157,40 +169,65 @@ export function Cube({
           )
         }}
       >
-        <div
-          style={{
-            ...cubeFaceStyle,
-            transform: `rotateY(-90deg) translateZ(${width / 2}px)`
-          }}
+        {/* The initial left  pane */}
+        <Pane
+          tabIndex={-1}
+          width={width}
+          height={height}
+          rotate={-90}
+          active={currentActivePane === 3}
         >
-          {renderItem(indexesToRender[3])}
-        </div>
+          {renderItem(
+            indexesToRender[3],
+            currentActivePane === 3 && !animating,
+            props.rotateY
+          )}
+        </Pane>
 
-        <div
-          style={{
-            ...cubeFaceStyle,
-            transform: `rotateY(0deg) translateZ(${width / 2}px)`
-          }}
+        {/* The initial front  pane */}
+        <Pane
+          tabIndex={-1}
+          width={width}
+          height={height}
+          rotate={0}
+          active={currentActivePane === 0}
         >
-          {renderItem(indexesToRender[0])}
-        </div>
-        <div
-          style={{
-            ...cubeFaceStyle,
-            transform: `rotateY(90deg) translateZ(${width / 2}px)`
-          }}
-        >
-          {renderItem(indexesToRender[1])}
-        </div>
+          {renderItem(
+            indexesToRender[0],
+            currentActivePane === 0 && !animating,
+            props.rotateY
+          )}
+        </Pane>
 
-        <div
-          style={{
-            ...cubeFaceStyle,
-            transform: `rotateY(-180deg) translateZ(${width / 2}px)`
-          }}
+        {/* The initial right pane */}
+        <Pane
+          tabIndex={-1}
+          width={width}
+          height={height}
+          rotate={90}
+          active={currentActivePane === 1}
         >
-          {renderItem(indexesToRender[2])}
-        </div>
+          {renderItem(
+            indexesToRender[1],
+            currentActivePane === 1 && !animating,
+            props.rotateY
+          )}
+        </Pane>
+
+        {/* The initial back pane */}
+        <Pane
+          tabIndex={-1}
+          width={width}
+          height={height}
+          rotate={-180}
+          active={currentActivePane === 2}
+        >
+          {renderItem(
+            indexesToRender[2],
+            currentActivePane === 2 && !animating,
+            props.rotateY
+          )}
+        </Pane>
       </animated.div>
     </div>
   );

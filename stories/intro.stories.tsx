@@ -17,8 +17,13 @@ storiesOf("Hello", module).add("Example", () => {
       <Cube
         width={300}
         hasNext={i => i < 9}
-        renderItem={i => {
-          return <div>{items[i]}</div>;
+        renderItem={(i, active) => {
+          return (
+            <div>
+              {items[i]}
+              {active ? "active" : ""}
+            </div>
+          );
         }}
       />
     </div>
