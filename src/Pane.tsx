@@ -34,6 +34,7 @@ export function Pane({
       style={{
         display: "flex",
         flexDirection: "column",
+        backfaceVisibility: "visible",
         outline: "none",
         padding: "3px",
         position: "absolute",

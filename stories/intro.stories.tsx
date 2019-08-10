@@ -25,16 +25,17 @@ storiesOf("Hello", module).add("Example", () => {
       }}
     >
       <Cube
-        width={400}
+        width={300}
+        height={400}
         hasNext={i => i < images.length - 1}
         renderItem={(i, active) => {
-          if (i === 2) {
-            return <VideoPane video={require("./video.mp4")} active={active} />;
-          }
+          // if (i === 2) {
+          //   return <VideoPane video={require("./video.mp4")} active={active} />;
+          // }
 
-          if (i === 1) {
-            return <VideoPane video={require("./vid2.mp4")} active={active} />;
-          }
+          // if (i === 1) {
+          //   return <VideoPane video={require("./vid2.mp4")} active={active} />;
+          // }
 
           return (
             <div
@@ -76,6 +77,7 @@ function VideoPane({ active, video }: { active: boolean; video: string }) {
       }}
     >
       <video
+        playsInline
         style={{
           objectFit: "cover",
           flex: 1

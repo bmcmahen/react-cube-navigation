@@ -1,5 +1,6 @@
 body {
   background: #333;
+  overflow: hidden;
 }
 
 .Cube__Pane {

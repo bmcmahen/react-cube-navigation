@@ -33,7 +33,7 @@ export function Cube({
   renderItem,
   width = 200,
   height = 600,
-  perspective = 1600,
+  perspective = 1200,
   paneStyle,
   scaleRange = [1, 0.95]
 }: CubeProps) {
@@ -178,6 +178,7 @@ export function Cube({
           width: "100%",
           height: "100%",
           position: "relative",
+          backfaceVisibility: "visible",
           transformStyle: "preserve-3d",
           transform: props.rotateY.to(
             x =>
