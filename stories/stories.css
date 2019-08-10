@@ -1,6 +1,8 @@
 body {
   background: #333;
   overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 .Cube__Pane {

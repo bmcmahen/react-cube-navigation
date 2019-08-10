@@ -21,12 +21,13 @@ storiesOf("Hello", module).add("Example", () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        margin: "2rem"
+        height: "100vh"
       }}
     >
       <Cube
-        width={300}
-        height={400}
+        width={window.innerWidth - 50}
+        height={window.innerHeight - 50}
+        lockScrolling
         hasNext={i => i < images.length - 1}
         renderItem={(i, active) => {
           // if (i === 2) {

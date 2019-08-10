@@ -17,6 +17,7 @@ export interface CubeProps {
   perspective?: number;
   paneStyle?: React.CSSProperties;
   scaleRange?: [number, number];
+  lockScrolling?: boolean;
 }
 
 /**
@@ -35,7 +36,8 @@ export function Cube({
   height = 600,
   perspective = 1200,
   paneStyle,
-  scaleRange = [1, 0.95]
+  scaleRange = [1, 0.95],
+  lockScrolling = false
 }: CubeProps) {
   const [props, set] = useSpring(() => ({ rotateY: 0 }));
   const [index, setIndex] = React.useState(0);
@@ -45,7 +47,7 @@ export function Cube({
   const [animating, setAnimating] = React.useState(false);
 
   // lock body scrolling when gesturing or animating
-  useScrollLock(animating);
+  useScrollLock(animating || lockScrolling);
 
   /**
    * Animate our cube into position when our active
