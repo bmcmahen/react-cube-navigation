@@ -1,7 +1,7 @@
 {
-  "name": "react-cube",
+  "name": "react-cube-navigation",
   "version": "1.0.0",
-  "description": "instagram like cube interface",
+  "description": "An instagram story style navigation pattern for the web",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "typings": "esm/index.d.ts",
