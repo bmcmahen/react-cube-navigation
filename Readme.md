@@ -2,6 +2,8 @@
 
 React Cube Navigation provides an animated cube style navigation pattern like that found in Instagram stories.
 
+[Demo on CodeSandbox](https://codesandbox.io/embed/react-cube-navigation-example-gngpz)
+
 ## Features
 
 - Render an infinite number of panes
