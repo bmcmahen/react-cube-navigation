@@ -7,6 +7,8 @@ import useScrollLock from "use-scroll-lock";
 
 export interface CubeProps {
   hasNext?: (i: number) => boolean;
+  index: number;
+  onChange: (i: number) => void;
   renderItem: (
     i: number,
     active: boolean,
@@ -31,6 +33,8 @@ export interface CubeProps {
 
 export function Cube({
   hasNext = () => true,
+  onChange,
+  index,
   renderItem,
   width = 200,
   height = 600,
@@ -40,7 +44,6 @@ export function Cube({
   lockScrolling = false
 }: CubeProps) {
   const [props, set] = useSpring(() => ({ rotateY: 0 }));
-  const [index, setIndex] = React.useState(0);
   const prevIndex = usePrevious(index);
   const [indexesToRender, setIndexesToRender] = React.useState([0, 1, 2, -1]);
   const currentActivePane = index % 4;
@@ -70,17 +73,17 @@ export function Cube({
   const onEnd = React.useCallback(
     ({ delta, velocity }) => {
       if (velocity > 0.12) {
-        setIndex(delta[0] < 0 ? index + 1 : index - 1);
+        onChange(delta[0] < 0 ? index + 1 : index - 1);
         return;
       }
 
       // next
       if (delta[0] < -(width / 2)) {
-        setIndex(index + 1);
+        onChange(index + 1);
 
         // prev
       } else if (delta[0] > width / 2) {
-        setIndex(index - 1);
+        onChange(index - 1);
 
         // current
       } else {

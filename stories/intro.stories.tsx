@@ -15,8 +15,13 @@ const images = [
 ];
 
 storiesOf("Hello", module).add("Example", () => {
+  return <Example />;
+});
+
+function Example() {
   const w = window.innerWidth - 25;
   const h = window.innerHeight - 25;
+  const [index, setIndex] = React.useState(0);
 
   return (
     <div
@@ -28,6 +33,8 @@ storiesOf("Hello", module).add("Example", () => {
       }}
     >
       <Cube
+        onChange={i => setIndex(i)}
+        index={index}
         width={w > 375 ? 375 : w}
         height={h > 600 ? 600 : h}
         lockScrolling
@@ -48,7 +55,7 @@ storiesOf("Hello", module).add("Example", () => {
       />
     </div>
   );
-});
+}
 
 function VideoPane({ active, video }: { active: boolean; video: string }) {
   const ref = React.useRef<HTMLVideoElement>(null);
