@@ -29,7 +29,7 @@ export function Pane({
     <div
       className="Cube__Pane"
       aria-hidden={!active}
-      tabIndex={-1}
+      tabIndex={active ? 0 : -1}
       ref={ref}
       style={{
         display: "flex",

@@ -193,7 +193,6 @@ export function Cube({
       >
         {/* The initial left  pane */}
         <Pane
-          tabIndex={-1}
           width={width}
           height={height}
           rotate={-90}
@@ -209,7 +208,6 @@ export function Cube({
 
         {/* The initial front  pane */}
         <Pane
-          tabIndex={-1}
           width={width}
           height={height}
           rotate={0}
@@ -225,7 +223,6 @@ export function Cube({
 
         {/* The initial right pane */}
         <Pane
-          tabIndex={-1}
           width={width}
           height={height}
           rotate={90}
@@ -241,7 +238,6 @@ export function Cube({
 
         {/* The initial back pane */}
         <Pane
-          tabIndex={-1}
           width={width}
           height={height}
           rotate={-180}
