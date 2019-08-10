@@ -14,6 +14,9 @@ export interface CubeProps {
   ) => React.ReactNode;
   width?: number;
   height?: number;
+  perspective?: number;
+  paneStyle?: React.CSSProperties;
+  scaleRange?: [number, number];
 }
 
 /**
@@ -29,7 +32,10 @@ export function Cube({
   hasNext = () => true,
   renderItem,
   width = 200,
-  height = 600
+  height = 600,
+  perspective = 1600,
+  paneStyle,
+  scaleRange = [1, 0.95]
 }: CubeProps) {
   const [props, set] = useSpring(() => ({ rotateY: 0 }));
   const [index, setIndex] = React.useState(0);
@@ -136,6 +142,7 @@ export function Cube({
    */
 
   React.useEffect(() => {
+    // todo: usecallback style updates
     if (prevIndex && prevIndex !== index) {
       let movingForward = index > prevIndex;
       let indexes = [...indexesToRender];
@@ -153,23 +160,31 @@ export function Cube({
     }
   }, [prevIndex, indexesToRender, index]);
 
+  // todo: also alter scale slightly on rotate
+
   return (
     <div
+      className="Cube"
       style={{
         width: width + "px",
         height: height + "px",
-        perspective: "900px"
+        perspective: perspective + "px"
       }}
       {...bind}
     >
       <animated.div
+        className="Cube__animated-container"
         style={{
           width: "100%",
           height: "100%",
           position: "relative",
           transformStyle: "preserve-3d",
           transform: props.rotateY.to(
-            x => `translateZ(-${width / 2}px) rotateY(${x}deg)`
+            x =>
+              `translateZ(-${width / 2}px) rotateY(${x}deg) scale(${getScale(
+                x,
+                scaleRange
+              )})`
           )
         }}
       >
@@ -180,6 +195,7 @@ export function Cube({
           height={height}
           rotate={-90}
           active={currentActivePane === 3}
+          style={paneStyle}
         >
           {renderItem(
             indexesToRender[3],
@@ -195,6 +211,7 @@ export function Cube({
           height={height}
           rotate={0}
           active={currentActivePane === 0}
+          style={paneStyle}
         >
           {renderItem(
             indexesToRender[0],
@@ -210,6 +227,7 @@ export function Cube({
           height={height}
           rotate={90}
           active={currentActivePane === 1}
+          style={paneStyle}
         >
           {renderItem(
             indexesToRender[1],
@@ -225,6 +243,7 @@ export function Cube({
           height={height}
           rotate={-180}
           active={currentActivePane === 2}
+          style={paneStyle}
         >
           {renderItem(
             indexesToRender[2],
@@ -235,4 +254,20 @@ export function Cube({
       </animated.div>
     </div>
   );
+}
+
+function getScale(x: number, scaleRange: [number, number]) {
+  const diff = Math.abs(x) % 90;
+
+  if (!diff) {
+    return 1;
+  }
+
+  const a = diff > 45 ? [90, 45] : [45, 0];
+  const b = diff > 45 ? scaleRange : [scaleRange[1], scaleRange[0]];
+  const o = a[1] - a[0];
+  const n = b[1] - b[0];
+  let v = ((diff - a[0]) * n) / o + b[0];
+
+  return v;
 }
