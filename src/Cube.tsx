@@ -43,9 +43,17 @@ export function Cube({
   scaleRange = [1, 0.95],
   lockScrolling = false
 }: CubeProps) {
-  const [props, set] = useSpring(() => ({ rotateY: 0 }));
+  const [props, set] = useSpring(() => ({
+    rotateY: index * -90,
+    immediate: true
+  }));
   const prevIndex = usePrevious(index);
-  const [indexesToRender, setIndexesToRender] = React.useState([0, 1, 2, -1]);
+  const [indexesToRender, setIndexesToRender] = React.useState([
+    index,
+    index + 1,
+    index + 2,
+    index - 1
+  ]);
   const currentActivePane = index % 4;
   const [animating, setAnimating] = React.useState(false);
 
@@ -161,6 +169,8 @@ export function Cube({
           indexes[maxIndex] = Math.min(...indexes) - 1;
         }
       }
+
+      console.log(indexesToRender, indexes);
       setIndexesToRender(indexes);
     }
   }, [prevIndex, indexesToRender, index]);

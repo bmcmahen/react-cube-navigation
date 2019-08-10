@@ -21,7 +21,7 @@ storiesOf("Hello", module).add("Example", () => {
 function Example() {
   const w = window.innerWidth - 25;
   const h = window.innerHeight - 25;
-  const [index, setIndex] = React.useState(0);
+  const [index, setIndex] = React.useState(2);
 
   return (
     <div
