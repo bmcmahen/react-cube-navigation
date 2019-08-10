@@ -10,10 +10,10 @@ React Cube Navigation provides an animated cube style navigation pattern like th
 
 ## Install
 
-Install `react-cube-navigation` and its peer dependency `react-gesture-responder` using yarn or npm.
+Install `react-cube-navigation` and its peer dependencies `react-gesture-responder` and `react-spring` using yarn or npm.
 
 ```
-yarn add react-cube-navigation react-gesture-responder
+yarn add react-cube-navigation react-gesture-responder react-spring
 ```
 
 ## Basic usage
