@@ -187,11 +187,12 @@ export function Cube({
   }, [prevIndex, indexesToRender, index]);
 
   return (
-    <div
+    <animated.div
       className="Cube"
       style={{
         width: width + "px",
         height: height + "px",
+        transform: props.rotateY.to(x => `scale(${getScale(x, scaleRange)}`),
         perspective: perspective + "px"
       }}
       {...bind}
@@ -205,11 +206,7 @@ export function Cube({
           backfaceVisibility: "visible",
           transformStyle: "preserve-3d",
           transform: props.rotateY.to(
-            x =>
-              `translateZ(-${width / 2}px) rotateY(${x}deg) scale(${getScale(
-                x,
-                scaleRange
-              )})`
+            x => `translateZ(-${width / 2}px) rotateY(${x}deg)`
           )
         }}
       >
@@ -273,7 +270,7 @@ export function Cube({
           )}
         </Pane>
       </animated.div>
-    </div>
+    </animated.div>
   );
 }
 
