@@ -50,7 +50,9 @@ export function Cube({
   const prevIndex = usePrevious(index);
   const currentActivePane = index % 4;
 
-  // this is a mess... gotta refactor
+  // this is a mess... gotta refactor. basically it determines
+  // what the initial render indexes should be given the
+  // initial index to show
   const [indexesToRender, setIndexesToRender] = React.useState(() => {
     const indexes = [-1, -1, -1, -1];
     indexes[currentActivePane] = index;
@@ -181,12 +183,9 @@ export function Cube({
         }
       }
 
-      console.log(indexesToRender, indexes);
       setIndexesToRender(indexes);
     }
   }, [prevIndex, indexesToRender, index]);
-
-  // todo: also alter scale slightly on rotate
 
   return (
     <div
