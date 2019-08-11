@@ -48,13 +48,24 @@ export function Cube({
     immediate: true
   }));
   const prevIndex = usePrevious(index);
-  const [indexesToRender, setIndexesToRender] = React.useState([
-    index,
-    index + 1,
-    index + 2,
-    index - 1
-  ]);
   const currentActivePane = index % 4;
+
+  // this is a mess... gotta refactor
+  const [indexesToRender, setIndexesToRender] = React.useState(() => {
+    const indexes = [-1, -1, -1, -1];
+    indexes[currentActivePane] = index;
+    const prevIndex = currentActivePane - 1 > -1 ? currentActivePane - 1 : 3;
+    indexes[prevIndex] = index - 1;
+
+    indexes.forEach(i => {
+      if (i === currentActivePane || i === prevIndex) return;
+      const minIndex = indexes.indexOf(Math.min(...indexes));
+      indexes[minIndex] = Math.max(...indexes) + 1;
+    });
+
+    return indexes;
+  });
+
   const [animating, setAnimating] = React.useState(false);
 
   // lock body scrolling when gesturing or animating
