@@ -38,7 +38,7 @@ export function Cube({
   renderItem,
   width = 200,
   height = 600,
-  perspective = 1200,
+  perspective = 800,
   paneStyle,
   scaleRange = [1, 0.95],
   lockScrolling = false
@@ -286,10 +286,12 @@ function getScale(x: number, scaleRange: [number, number]) {
 
   const convert =
     diff > 45
-      ? linearConversion([90, 45], scaleRange)
-      : linearConversion([45, 0], [scaleRange[1], scaleRange[0]]);
+      ? linearConversion([90, 45], [1, 0.5])
+      : linearConversion([45, 0], [0.5, 1]);
 
-  return convert(diff);
+  const eased = circ(convert(diff));
+  const scale = linearConversion([1, 0.5], scaleRange);
+  return scale(eased);
 }
 
 function linearConversion(a: [number, number], b: [number, number]) {
@@ -299,4 +301,8 @@ function linearConversion(a: [number, number], b: [number, number]) {
   return function(x: number) {
     return ((x - a[0]) * n) / o + b[0];
   };
+}
+
+function circ(timeFraction: number) {
+  return 1 - Math.sin(Math.acos(timeFraction));
 }

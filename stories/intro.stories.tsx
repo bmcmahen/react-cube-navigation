@@ -29,9 +29,20 @@ function Example() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh"
+        height: "100vh",
+        position: "relative"
       }}
     >
+      <button
+        onClick={() => setIndex(index - 1)}
+        style={{
+          display: index > 0 ? "block" : "none",
+          position: "absolute",
+          left: 0
+        }}
+      >
+        back
+      </button>
       <Cube
         onChange={i => setIndex(i)}
         index={index}
@@ -57,6 +68,16 @@ function Example() {
           );
         }}
       />
+      <button
+        onClick={() => setIndex(index + 1)}
+        style={{
+          display: index !== images.length - 1 ? "block" : "none",
+          position: "absolute",
+          right: 0
+        }}
+      >
+        forward
+      </button>
     </div>
   );
 }
