@@ -1,6 +1,6 @@
 {
   "name": "react-cube-navigation",
-  "version": "2.0.0",
+  "version": "1.0.1",
   "description": "An instagram inspired 3d cube navigation pattern for the web",
   "main": "cjs/index.js",
   "module": "esm/index.js",
