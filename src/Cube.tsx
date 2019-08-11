@@ -142,12 +142,11 @@ export function Cube({
       }
 
       const currentRotate = index * 90 * -1;
-      const a = [0, width];
-      const b = [currentRotate, currentRotate + 90];
-      const x = delta[0];
-      const o = a[1] - a[0];
-      const n = b[1] - b[0];
-      let v = ((x - a[0]) * n) / o + b[0];
+      const convert = linearConversion(
+        [0, width],
+        [currentRotate, currentRotate + 90]
+      );
+      let v = convert(delta[0]);
 
       if (v > currentRotate + 90) {
         v = currentRotate + 90;
@@ -285,11 +284,19 @@ function getScale(x: number, scaleRange: [number, number]) {
     return 1;
   }
 
-  const a = diff > 45 ? [90, 45] : [45, 0];
-  const b = diff > 45 ? scaleRange : [scaleRange[1], scaleRange[0]];
-  const o = a[1] - a[0];
-  const n = b[1] - b[0];
-  let v = ((diff - a[0]) * n) / o + b[0];
+  const convert =
+    diff > 45
+      ? linearConversion([90, 45], scaleRange)
+      : linearConversion([45, 0], [scaleRange[1], scaleRange[0]]);
 
-  return v;
+  return convert(diff);
+}
+
+function linearConversion(a: [number, number], b: [number, number]) {
+  var o = a[1] - a[0],
+    n = b[1] - b[0];
+
+  return function(x: number) {
+    return ((x - a[0]) * n) / o + b[0];
+  };
 }

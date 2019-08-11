@@ -40,6 +40,10 @@ function Example() {
         lockScrolling
         hasNext={i => i < images.length - 1}
         renderItem={(i, active) => {
+          if (!images[i]) {
+            return null;
+          }
+
           return (
             <div
               style={{
