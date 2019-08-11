@@ -35,8 +35,12 @@ const images = [
 ];
 
 function Example() {
+  const [index, setIndex] = React.useState(0);
+
   return (
     <Cube
+      index={index}
+      onChange={i => setIndex(i)}
       width={300}
       height={600}
       hasNext={i => i < images.length - 1}
@@ -64,6 +68,8 @@ function Example() {
 | Name          | Type                                             | Default Value | Description                                          |
 | ------------- | ------------------------------------------------ | ------------- | ---------------------------------------------------- |
 | renderItem \* | (i: number, active: boolean) => React.ReactNode; |               | A callback to render cube panes                      |
+| onChange \*   | (i: number) => void;                             |               | A callback to update the current index               |
+| index \*      | number                                           |               | The index to render                                  |
 | hasNext       | (i: number) => boolean                           | true          | Whether another pane exists after the provided index |
 | width         | number                                           | 200           | The width of the cube in pixels                      |
 | height        | number                                           | 600           | The height of the cube in pixels                     |
