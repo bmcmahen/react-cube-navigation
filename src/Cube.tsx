@@ -20,6 +20,7 @@ export interface CubeProps {
   paneStyle?: React.CSSProperties;
   scaleRange?: [number, number];
   lockScrolling?: boolean;
+  enableGestures?: boolean;
 }
 
 /**
@@ -41,7 +42,8 @@ export function Cube({
   perspective = 800,
   paneStyle,
   scaleRange = [1, 0.95],
-  lockScrolling = false
+  lockScrolling = false,
+  enableGestures = true
 }: CubeProps) {
   const [props, set] = useSpring(() => ({
     rotateY: index * -90,
@@ -121,6 +123,10 @@ export function Cube({
   const { bind } = useGestureResponder({
     onStartShouldSet: () => false,
     onMoveShouldSet: ({ direction }) => {
+      if (!enableGestures) {
+        return false;
+      }
+
       // beginning of stack and swiping left
       if (index === 0 && direction[0] > 0) {
         return false;
