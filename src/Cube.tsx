@@ -319,7 +319,7 @@ function resetIndexes(
   if (forward) {
     indexes[getNextIndex(nextIndex + 1)] = index + 2;
   } else {
-    indexes[getPreviousIndex(index - 1)] = index - 2 < -1 ? -1 : index - 2;
+    indexes[getPreviousIndex(prevIndex - 1)] = index - 2 < -1 ? -1 : index - 2;
   }
 
   return indexes;
