@@ -21,7 +21,7 @@ storiesOf("Hello", module).add("Example", () => {
 function Example() {
   const w = window.innerWidth - 25;
   const h = window.innerHeight - 25;
-  const [index, setIndex] = React.useState(3);
+  const [index, setIndex] = React.useState({ index: 3, immediate: false });
 
   return (
     <div
@@ -34,17 +34,27 @@ function Example() {
       }}
     >
       <button
-        onClick={() => setIndex(index - 1)}
+        onClick={() => setIndex({ index: index.index - 1, immediate: false })}
         style={{
-          display: index > 0 ? "block" : "none",
+          display: index.index > 0 ? "block" : "none",
           position: "absolute",
           left: 0
         }}
       >
         back
       </button>
+      <button
+        onClick={() => setIndex({ index: 0, immediate: true })}
+        style={{
+          display: "block",
+          position: "absolute",
+          top: 0
+        }}
+      >
+        skip back to start
+      </button>
       <Cube
-        onChange={i => setIndex(i)}
+        onChange={i => setIndex({ index: i, immediate: false })}
         index={index}
         width={w > 375 ? 375 : w}
         height={h > 600 ? 600 : h}
@@ -69,9 +79,9 @@ function Example() {
         }}
       />
       <button
-        onClick={() => setIndex(index + 1)}
+        onClick={() => setIndex({ index: index.index + 1, immediate: false })}
         style={{
-          display: index !== images.length - 1 ? "block" : "none",
+          display: index.index !== images.length - 1 ? "block" : "none",
           position: "absolute",
           right: 0
         }}

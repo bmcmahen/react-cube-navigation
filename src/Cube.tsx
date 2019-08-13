@@ -5,9 +5,14 @@ import { useGestureResponder } from "react-gesture-responder";
 import { Pane } from "./Pane";
 import useScrollLock from "use-scroll-lock";
 
+export interface IndexProvider {
+  index: number;
+  immediate: boolean;
+}
+
 export interface CubeProps {
   hasNext?: (i: number) => boolean;
-  index: number;
+  index: number | IndexProvider;
   onChange: (i: number) => void;
   renderItem: (
     i: number,
@@ -35,7 +40,7 @@ export interface CubeProps {
 export function Cube({
   hasNext = () => true,
   onChange,
-  index,
+  index: providedIndex,
   renderItem,
   width = 200,
   height = 600,
@@ -45,30 +50,28 @@ export function Cube({
   lockScrolling = false,
   enableGestures = true
 }: CubeProps) {
+  // optionally allow the user to pass in an object
+  // with an index and animated property. This allows
+  // the user to skip to an index without animating.
+  let { immediate, index } =
+    typeof providedIndex === "number"
+      ? { immediate: false, index: providedIndex }
+      : providedIndex;
+
   const [props, set] = useSpring(() => ({
     rotateY: index * -90,
     immediate: true
   }));
+
   const prevIndex = usePrevious(index);
   const currentActivePane = index % 4;
 
   // this is a mess... gotta refactor. basically it determines
   // what the initial render indexes should be given the
   // initial index to show
-  const [indexesToRender, setIndexesToRender] = React.useState(() => {
-    const indexes = [-1, -1, -1, -1];
-    indexes[currentActivePane] = index;
-    const prevIndex = currentActivePane - 1 > -1 ? currentActivePane - 1 : 3;
-    indexes[prevIndex] = index - 1;
-
-    indexes.forEach(i => {
-      if (i === currentActivePane || i === prevIndex) return;
-      const minIndex = indexes.indexOf(Math.min(...indexes));
-      indexes[minIndex] = Math.max(...indexes) + 1;
-    });
-
-    return indexes;
-  });
+  const [indexesToRender, setIndexesToRender] = React.useState(() =>
+    resetIndexes(index, true)
+  );
 
   const [animating, setAnimating] = React.useState(false);
 
@@ -86,8 +89,8 @@ export function Cube({
 
   React.useEffect(() => {
     setAnimating(true);
-    set({ rotateY: index * 90 * -1, immediate: false, onRest });
-  }, [onRest, index, set]);
+    set({ rotateY: index * 90 * -1, immediate, onRest });
+  }, [onRest, index, set, immediate]);
 
   /**
    * On drag end, determine the index to show
@@ -175,22 +178,11 @@ export function Cube({
   React.useEffect(() => {
     // todo: usecallback style updates
     if (prevIndex && prevIndex !== index) {
-      let movingForward = index > prevIndex;
-      let indexes = [...indexesToRender];
-      if (movingForward) {
-        const minIndex = indexes.indexOf(Math.min(...indexes));
-        indexes[minIndex] = Math.max(...indexes) + 1;
-      } else {
-        const maxIndex = indexes.indexOf(Math.max(...indexes));
-        const next = Math.min(...indexes) - 1;
-        if (next > -1) {
-          indexes[maxIndex] = Math.min(...indexes) - 1;
-        }
-      }
-
-      setIndexesToRender(indexes);
+      setIndexesToRender(
+        resetIndexes(index, index > prevIndex, [...indexesToRender])
+      );
     }
-  }, [prevIndex, indexesToRender, index]);
+  }, [prevIndex, indexesToRender, index, immediate]);
 
   return (
     <animated.div
@@ -308,4 +300,37 @@ function linearConversion(a: [number, number], b: [number, number]) {
 
 function circ(timeFraction: number) {
   return 1 - Math.sin(Math.acos(timeFraction));
+}
+
+function resetIndexes(
+  index: number,
+  forward: boolean,
+  indexes = [-1, -1, -1, -1]
+) {
+  const currentActivePane = index % 4;
+  indexes[currentActivePane] = index;
+
+  const prevIndex = getPreviousIndex(currentActivePane - 1);
+  indexes[prevIndex] = index - 1;
+
+  const nextIndex = getNextIndex(currentActivePane + 1);
+  indexes[nextIndex] = index + 1;
+
+  if (forward) {
+    indexes[getNextIndex(nextIndex + 1)] = index + 2;
+  } else {
+    indexes[getPreviousIndex(index - 1)] = index - 2 < -1 ? -1 : index - 2;
+  }
+
+  return indexes;
+}
+
+function getPreviousIndex(i: number) {
+  if (i > -1) return i;
+  return 3;
+}
+
+function getNextIndex(i: number) {
+  if (i < 4) return i;
+  return 0;
 }
