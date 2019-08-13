@@ -65,15 +65,15 @@ function Example() {
 
 ### Cube
 
-| Name          | Type                                             | Default Value | Description                                          |
-| ------------- | ------------------------------------------------ | ------------- | ---------------------------------------------------- |
-| renderItem \* | (i: number, active: boolean) => React.ReactNode; |               | A callback to render cube panes                      |
-| onChange \*   | (i: number) => void;                             |               | A callback to update the current index               |
-| index \*      | number                                           |               | The index to render                                  |
-| hasNext       | (i: number) => boolean                           | true          | Whether another pane exists after the provided index |
-| width         | number                                           | 200           | The width of the cube in pixels                      |
-| height        | number                                           | 600           | The height of the cube in pixels                     |
-| perspective   | number                                           | 1200          | The perspective of the cube in pixels                |
-| paneStyle     | React.CSSProperties                              |               | Pane container styles                                |
-| scaleRange    | [number, number]                                 | [1, 0.95]     | The scale range to shrink the cube when swiping      |
-| lockScrolling | boolean                                          | false         | Lock all page scrolling                              |
+| Name          | Type                                             | Default Value | Description                                                                                             |
+| ------------- | ------------------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------- |
+| renderItem \* | (i: number, active: boolean) => React.ReactNode; |               | A callback to render cube panes                                                                         |
+| onChange \*   | (i: number) => void;                             |               | A callback to update the current index                                                                  |
+| index \*      | number \|{ index: number, immediate: boolean}    |               | The index to render. Optionally pass an object with an index and immediate property to skip animations. |
+| hasNext       | (i: number) => boolean                           | true          | Whether another pane exists after the provided index                                                    |
+| width         | number                                           | 200           | The width of the cube in pixels                                                                         |
+| height        | number                                           | 600           | The height of the cube in pixels                                                                        |
+| perspective   | number                                           | 1200          | The perspective of the cube in pixels                                                                   |
+| paneStyle     | React.CSSProperties                              |               | Pane container styles                                                                                   |
+| scaleRange    | [number, number]                                 | [1, 0.95]     | The scale range to shrink the cube when swiping                                                         |
+| lockScrolling | boolean                                          | false         | Lock all page scrolling                                                                                 |
