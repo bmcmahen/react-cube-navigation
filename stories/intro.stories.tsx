@@ -1,6 +1,6 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
-import { Cube } from "../src/Cube";
+import { Cube, CubeIndex } from "../src/Cube";
 import "./stories.css";
 
 const images = [
@@ -21,7 +21,8 @@ storiesOf("Hello", module).add("Example", () => {
 function Example() {
   const w = window.innerWidth - 25;
   const h = window.innerHeight - 25;
-  const [index, setIndex] = React.useState({ index: 3, immediate: false });
+  const [indexes, setIndexes] = React.useState({ index: 3, immediate: false });
+  const { index } = indexes;
 
   return (
     <div
@@ -34,28 +35,36 @@ function Example() {
       }}
     >
       <button
-        onClick={() => setIndex({ index: index.index - 1, immediate: false })}
+        onClick={() =>
+          setIndexes({ index: indexes.index - 1, immediate: false })
+        }
         style={{
-          display: index.index > 0 ? "block" : "none",
+          display: index > 0 ? "block" : "none",
           position: "absolute",
           left: 0
         }}
       >
         back
       </button>
-      <button
-        onClick={() => setIndex({ index: 0, immediate: true })}
-        style={{
-          display: "block",
-          position: "absolute",
-          top: 0
-        }}
-      >
-        skip back to start
-      </button>
+      {images.map((img, i) => (
+        <button
+          key={img}
+          onClick={() => {
+            setIndexes({ index: i, immediate: true });
+          }}
+          style={{
+            display: "block",
+            position: "absolute",
+            top: 0,
+            left: i * 20 + "px"
+          }}
+        >
+          {i}
+        </button>
+      ))}
       <Cube
-        onChange={i => setIndex({ index: i, immediate: false })}
-        index={index}
+        onChange={i => setIndexes({ index: i, immediate: false })}
+        index={indexes}
         width={w > 375 ? 375 : w}
         height={h > 600 ? 600 : h}
         lockScrolling
@@ -79,9 +88,9 @@ function Example() {
         }}
       />
       <button
-        onClick={() => setIndex({ index: index.index + 1, immediate: false })}
+        onClick={() => setIndexes({ index: index + 1, immediate: false })}
         style={{
-          display: index.index !== images.length - 1 ? "block" : "none",
+          display: index !== images.length - 1 ? "block" : "none",
           position: "absolute",
           right: 0
         }}

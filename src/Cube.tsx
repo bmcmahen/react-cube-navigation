@@ -5,14 +5,16 @@ import { useGestureResponder } from "react-gesture-responder";
 import { Pane } from "./Pane";
 import useScrollLock from "use-scroll-lock";
 
-export interface IndexProvider {
+export interface CubeIndexObject {
   index: number;
   immediate: boolean;
 }
 
+export type CubeIndex = number | CubeIndexObject;
+
 export interface CubeProps {
   hasNext?: (i: number) => boolean;
-  index: number | IndexProvider;
+  index: CubeIndex;
   onChange: (i: number) => void;
   renderItem: (
     i: number,
@@ -177,8 +179,8 @@ export function Cube({
 
   React.useEffect(() => {
     // todo: usecallback style updates
-    if (prevIndex && prevIndex !== index) {
-      setIndexesToRender(
+    if (typeof prevIndex === "number" && prevIndex !== index) {
+      setIndexesToRender(indexesToRender =>
         resetIndexes(index, index > prevIndex, [...indexesToRender])
       );
     }
