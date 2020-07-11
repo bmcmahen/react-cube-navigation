@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useSpring, animated, SpringValue } from "react-spring";
-import { usePrevious } from "./use-previous";
 import { useGestureResponder } from "react-gesture-responder";
-import { Pane } from "./Pane";
 import useScrollLock from "use-scroll-lock";
+import { usePrevious } from "./use-previous";
+import { Pane } from "./Pane";
 
 export interface CubeIndexObject {
   index: number;
